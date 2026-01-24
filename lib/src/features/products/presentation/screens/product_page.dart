@@ -4,7 +4,8 @@ import '../../../cart/data/cart_data.dart';
 import '../../../cart/data/cart_item.dart';
 import '../../../cart/presentation/screens/cart_page.dart';
 import '../../data/models/product_model.dart';
-
+import 'package:med_shakthi/src/features/wishlist/data/wishlist_service.dart';
+import 'package:med_shakthi/src/features/wishlist/data/models/wishlist_item_model.dart';
 
 class ProductPage extends StatelessWidget {
   final Product product;
@@ -18,7 +19,8 @@ class ProductPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const _TopBar(),
+            // 🔧 FIX: pass product to TopBar
+            _TopBar(product: product),
             const SizedBox(height: 8),
             Expanded(
               child: SingleChildScrollView(
@@ -44,11 +46,27 @@ class ProductPage extends StatelessWidget {
 
 /* ---------------- TOP BAR ---------------- */
 
-class _TopBar extends StatelessWidget {
-  const _TopBar();
+class _TopBar extends StatefulWidget {
+  final Product product;
+
+  const _TopBar({required this.product});
+
+  @override
+  State<_TopBar> createState() => _TopBarState();
+}
+
+class _TopBarState extends State<_TopBar> {
+
+  // ✅ SHARED INSTANCE (FIX)
+  static final WishlistService wishlistService =
+  WishlistService(userId: 'demo-user');
+
 
   @override
   Widget build(BuildContext context) {
+    final bool isWishlisted =
+    wishlistService.isInWishlist(widget.product.id);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
@@ -64,7 +82,7 @@ class _TopBar extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.06),
+                    color: Colors.black.withValues(alpha: 0.06),
                     blurRadius: 6,
                     offset: const Offset(0, 3),
                   ),
@@ -74,7 +92,31 @@ class _TopBar extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          const Icon(Icons.favorite_border),
+
+          // ❤️ FIXED WISHLIST ICON
+          InkWell(
+            onTap: () async {
+              if (isWishlisted) {
+                await wishlistService
+                    .removeFromWishlist(widget.product.id);
+              } else {
+                await wishlistService.addToWishlist(
+                  WishlistItem(
+                    id: widget.product.id,
+                    name: widget.product.name,
+                    price: widget.product.price,
+                    image: widget.product.image,
+                  ),
+                );
+              }
+              setState(() {});
+            },
+            child: Icon(
+              isWishlisted ? Icons.favorite : Icons.favorite_border,
+              color: isWishlisted ? Colors.red : Colors.grey,
+            ),
+          ),
+
           const SizedBox(width: 12),
           const Icon(Icons.share),
         ],
@@ -224,13 +266,13 @@ class _BottomBar extends StatelessWidget {
               context.read<CartData>().addItem(
                 CartItem(
                   id: product.id,
-                  name: product.name, // Required
-                  title: product.name, // Optional, matching title
-                  brand: product.category, // Optional, using category as brand
-                  size: 'Standard', // Optional, default size
-                  price: product.price, // Required
-                  imagePath: product.image, // Optional, matching image
-                  imageUrl: product.image, // Optional, backward compatibility
+                  name: product.name,
+                  title: product.name,
+                  brand: product.category,
+                  size: 'Standard',
+                  price: product.price,
+                  imagePath: product.image,
+                  imageUrl: product.image,
                 ),
               );
 

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class OrderDetailsPage extends StatelessWidget {
-  const OrderDetailsPage({super.key});
+  final String orderId;
+
+  const OrderDetailsPage({
+    super.key,
+    required this.orderId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,7 @@ class OrderDetailsPage extends StatelessWidget {
 
             // 📦 Order Summary
             _sectionTitle("Order Summary"),
-            _infoRow("Order ID", "ORD1023"),
+            _infoRow("Order ID", orderId), // ✅ dynamic
             _infoRow("Order Date", "08 Jan 2026"),
             _infoRow("Status", "Pending"),
             _infoRow("Payment", "Credit (30 Days)"),
@@ -28,8 +33,10 @@ class OrderDetailsPage extends StatelessWidget {
             _sectionTitle("Pharmacy Details"),
             _infoRow("Pharmacy Name", "ABC Medicals"),
             _infoRow("Contact", "+91 98765 43210"),
-            _infoRow("Delivery Address",
-                "12, MG Road, Bengaluru, Karnataka"),
+            _infoRow(
+              "Delivery Address",
+              "12, MG Road, Bengaluru, Karnataka",
+            ),
             const SizedBox(height: 20),
 
             // 💊 Items Ordered

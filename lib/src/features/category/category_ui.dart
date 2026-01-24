@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'category_products_page.dart';
+import 'product_filter_sheet.dart';
+import 'b2b_product_filter.dart';
 
 class CategoryPageNew extends StatelessWidget {
   const CategoryPageNew({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    Theme.of(context);
 
     return Scaffold(
       backgroundColor: const Color(0xfff7f7f7), // keep current light theme
@@ -13,10 +16,11 @@ class CategoryPageNew extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0.5,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
-          onPressed: () => Navigator.pop(context),
-        ),
+        automaticallyImplyLeading: false,
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back, color: Colors.black87),
+        //   onPressed: () => Navigator.pop(context),
+        // ),
         title: const Text(
           'Shop by Category',
           style: TextStyle(
@@ -41,8 +45,10 @@ class _CategoryBody extends StatelessWidget {
         slivers: [
           SliverToBoxAdapter(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
@@ -66,25 +72,22 @@ class _CategoryBody extends StatelessWidget {
                 crossAxisSpacing: 10,
                 childAspectRatio: 0.9,
               ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final item = corePharmacyCategories[index];
-                  return CategoryCard(item: item);
-                },
-                childCount: corePharmacyCategories.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final item = corePharmacyCategories[index];
+                return CategoryCard(item: item);
+              }, childCount: corePharmacyCategories.length),
             ),
           ),
 
           SliverToBoxAdapter(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 16.0,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  _CategoryGroupTitle(title: 'Personal Care'),
-                ],
+                children: const [_CategoryGroupTitle(title: 'Personal Care')],
               ),
             ),
           ),
@@ -99,25 +102,22 @@ class _CategoryBody extends StatelessWidget {
                 crossAxisSpacing: 10,
                 childAspectRatio: 0.9,
               ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final item = personalCareCategories[index];
-                  return CategoryCard(item: item);
-                },
-                childCount: personalCareCategories.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final item = personalCareCategories[index];
+                return CategoryCard(item: item);
+              }, childCount: personalCareCategories.length),
             ),
           ),
 
           SliverToBoxAdapter(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 16.0,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  _CategoryGroupTitle(title: 'Devices & Tools'),
-                ],
+                children: const [_CategoryGroupTitle(title: 'Devices & Tools')],
               ),
             ),
           ),
@@ -132,13 +132,10 @@ class _CategoryBody extends StatelessWidget {
                 crossAxisSpacing: 10,
                 childAspectRatio: 0.9,
               ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final item = deviceCategories[index];
-                  return CategoryCard(item: item);
-                },
-                childCount: deviceCategories.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final item = deviceCategories[index];
+                return CategoryCard(item: item);
+              }, childCount: deviceCategories.length),
             ),
           ),
         ],
@@ -169,28 +166,51 @@ class _SearchAndFilterBar extends StatelessWidget {
                 ),
               ],
             ),
-            child: TextField(
+            child: const TextField(
               decoration: InputDecoration(
                 hintText: 'Search medicines, categories…',
-                hintStyle:
-                    const TextStyle(fontSize: 13, color: Colors.grey),
-                prefixIcon: const Icon(Icons.search, size: 20),
+                hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
+                prefixIcon: Icon(Icons.search, size: 20),
                 border: InputBorder.none,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
               ),
             ),
           ),
         ),
         const SizedBox(width: 8),
-        Container(
-          height: 42,
-          width: 42,
-          decoration: BoxDecoration(
-            color: const Color(0xff2b9c8f), // your brand color
-            borderRadius: BorderRadius.circular(16),
+
+        /// ✅ FILTER BUTTON (FIXED)
+        GestureDetector(
+          onTap: () async {
+            final filters = await showModalBottomSheet<B2BProductFilter>(
+              context: context,
+              isScrollControlled: true,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              builder: (_) => const ProductFilterSheet(),
+            );
+
+            if (filters != null) {
+              debugPrint('Applied sort: ${filters.sortBy}');
+            }
+          },
+          child: Container(
+            height: 42,
+            width: 42,
+            decoration: BoxDecoration(
+              color: const Color(0xff2b9c8f),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Icon(
+              Icons.tune_rounded,
+              color: Colors.white,
+              size: 20,
+            ),
           ),
-          child: const Icon(Icons.tune_rounded, color: Colors.white, size: 20),
         ),
       ],
     );
@@ -217,8 +237,7 @@ class _ShortcutSection extends StatelessWidget {
         separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           return Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
@@ -229,11 +248,13 @@ class _ShortcutSection extends StatelessWidget {
                 if (index == 0)
                   const Icon(Icons.history, size: 14, color: Colors.teal),
                 if (index == 1)
-                  const Icon(Icons.local_fire_department,
-                      size: 14, color: Colors.orange),
+                  const Icon(
+                    Icons.local_fire_department,
+                    size: 14,
+                    color: Colors.orange,
+                  ),
                 if (index == 2)
-                  const Icon(Icons.trending_up,
-                      size: 14, color: Colors.green),
+                  const Icon(Icons.trending_up, size: 14, color: Colors.green),
                 const SizedBox(width: 4),
                 Text(
                   shortcuts[index],
@@ -260,10 +281,7 @@ class _CategoryGroupTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: const TextStyle(
-        fontSize: 15,
-        fontWeight: FontWeight.w600,
-      ),
+      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
     );
   }
 }
@@ -274,7 +292,7 @@ class CategoryItem {
   final String title;
   final String imageAsset;
   final String skuCountText; // e.g. "120+ SKUs"
-  final String badgeText;    // e.g. "Fast moving" / "Offer"
+  final String badgeText; // e.g. "Fast moving" / "Offer"
   final Color badgeColor;
 
   CategoryItem({
@@ -357,6 +375,21 @@ final List<CategoryItem> deviceCategories = [
     badgeText: 'New',
     badgeColor: Colors.purple.shade500,
   ),
+  CategoryItem(
+    title: 'Supplements',
+    imageAsset: 'assets/categories/supplement.png',
+    skuCountText: '—',
+    badgeText: 'Available',
+    badgeColor: Colors.green.shade600,
+  ),
+
+  CategoryItem(
+    title: 'Surgical',
+    imageAsset: 'assets/categories/surgical.png',
+    skuCountText: '—',
+    badgeText: 'Available',
+    badgeColor: Colors.blue.shade600,
+  ),
 ];
 
 /// CATEGORY CARD WIDGET
@@ -371,8 +404,14 @@ class CategoryCard extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(14),
       onTap: () {
-        // TODO: navigate to category listing
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => CategoryProductsPage(categoryName: item.title),
+          ),
+        );
       },
+
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -392,15 +431,14 @@ class CategoryCard extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(6.0),
-                child: Image.asset(
-                  item.imageAsset,
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset(item.imageAsset, fit: BoxFit.contain),
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 6.0,
+                vertical: 4.0,
+              ),
               child: Column(
                 children: [
                   Text(
@@ -416,15 +454,14 @@ class CategoryCard extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     item.skuCountText,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      color: Colors.grey,
-                    ),
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
                   ),
                   const SizedBox(height: 4),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 6, vertical: 2),
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: item.badgeColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(10),
