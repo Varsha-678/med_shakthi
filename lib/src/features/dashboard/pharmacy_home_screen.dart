@@ -404,7 +404,7 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                 const Icon(Icons.star, color: Colors.amber, size: 14),
                 const SizedBox(width: 4),
                 Text(
-                  "${product.rating.toStringAsFixed(1)}",
+                  product.rating.toStringAsFixed(1),
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ],
@@ -671,7 +671,7 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                           const Icon(Icons.star, color: Colors.amber, size: 14),
                           const SizedBox(width: 4),
                           Text(
-                            "${product.rating.toStringAsFixed(1)}",
+                            product.rating.toStringAsFixed(1),
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.grey,

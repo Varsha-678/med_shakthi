@@ -154,7 +154,7 @@ class _SettingsPageState extends State<SettingsPage> {
       child: SwitchListTile(
         value: value,
         onChanged: onChanged,
-        activeColor: const Color(0xFF6AA39B),
+        activeThumbColor: const Color(0xFF6AA39B),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
         subtitle: Text(subtitle),
       ),

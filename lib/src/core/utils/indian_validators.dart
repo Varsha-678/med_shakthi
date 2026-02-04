@@ -66,8 +66,9 @@ class IndianValidators {
 
   static String? validateMobile(String? value) {
     if (value == null || value.isEmpty) return 'Enter phone number';
-    if (!_mobileRegex.hasMatch(value))
+    if (!_mobileRegex.hasMatch(value)) {
       return 'Enter valid 10-digit mobile number';
+    }
     return null;
   }
 
@@ -79,8 +80,9 @@ class IndianValidators {
 
   static String? validateCity(String? value) {
     if (value == null || value.isEmpty) return 'Enter city';
-    if (!_cityRegex.hasMatch(value))
+    if (!_cityRegex.hasMatch(value)) {
       return 'City should contain alphabets only';
+    }
     return null;
   }
 
@@ -92,12 +94,14 @@ class IndianValidators {
     if (!_panBasicRegex.hasMatch(pan)) return 'Invalid PAN format';
 
     // 4th Character Check (Status)
-    if (!panTypes.contains(pan[3]))
+    if (!panTypes.contains(pan[3])) {
       return 'Invalid PAN status type (4th character)';
+    }
 
     // 5th Character Check (Surname first letter) - Must be alphabet
-    if (!RegExp(r'[A-Z]').hasMatch(pan[4]))
+    if (!RegExp(r'[A-Z]').hasMatch(pan[4])) {
       return 'Invalid 5th character in PAN';
+    }
 
     return null;
   }

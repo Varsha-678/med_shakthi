@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'order_detail_screen.dart';
 
 class OrdersPage extends StatefulWidget {
   const OrdersPage({super.key});
@@ -233,9 +234,11 @@ class _OrdersPageState extends State<OrdersPage> {
               children: [
                 TextButton(
                   onPressed: () {
-                    // TODO: order details page open
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Order: $orderGroupId")),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => OrderDetailScreen(orderData: order),
+                      ),
                     );
                   },
                   child: const Text("View Details"),

@@ -18,7 +18,7 @@ class ChatListScreen extends StatelessWidget {
       body: ListView.separated(
         padding: const EdgeInsets.all(12),
         itemCount: 10,
-        separatorBuilder: (_, __) => const SizedBox(height: 6),
+        separatorBuilder: (_, _) => const SizedBox(height: 6),
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {

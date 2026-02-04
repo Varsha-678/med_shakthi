@@ -323,7 +323,7 @@ class _SupplierSignupPageState extends State<SupplierSignupPage> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 16),
                           child: DropdownButtonFormField<String>(
-                            value: _selectedState,
+                            initialValue: _selectedState,
                             menuMaxHeight: 300, // UX Fix: Limit height
                             isExpanded: true, // UX Fix: Prevent overflow
                             decoration: InputDecoration(

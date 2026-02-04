@@ -236,7 +236,7 @@ class _AddProductPageState extends State<AddProductPage> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: DropdownButtonFormField<String>(
-        value: category,
+        initialValue: category,
         decoration: _inputDecoration("Category"),
         items: categoryMap.keys
             .map((e) => DropdownMenuItem(value: e, child: Text(e)))
@@ -255,7 +255,7 @@ class _AddProductPageState extends State<AddProductPage> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: DropdownButtonFormField<String>(
-        value: subCategory,
+        initialValue: subCategory,
         decoration: _inputDecoration("Sub Category"),
         items: categoryMap[category]!
             .map((e) => DropdownMenuItem(value: e, child: Text(e)))

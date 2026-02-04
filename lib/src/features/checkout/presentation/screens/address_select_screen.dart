@@ -347,8 +347,9 @@ class _AddressSelectScreenState extends State<AddressSelectScreen> {
                             if (_isMoving) return; // Wait until steady
                             if (addressText == "Locating..." ||
                                 addressText == "Address not found" ||
-                                addressText == "Fetching address...")
+                                addressText == "Fetching address...") {
                               return;
+                            }
 
                             final user =
                                 Supabase.instance.client.auth.currentUser;

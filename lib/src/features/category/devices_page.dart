@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:convert';
 import 'package:csv/csv.dart';
 
 class DevicesPage extends StatefulWidget {

@@ -250,7 +250,7 @@ class SupplierDashboardHome extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: cats.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 25),
+        separatorBuilder: (_, _) => const SizedBox(width: 25),
         itemBuilder: (context, index) {
           final label = cats[index]['label'];
 
