@@ -359,6 +359,10 @@ class _SupplierSignupPageState extends State<SupplierSignupPage> {
                             },
                             validator: (value) =>
                                 value == null ? 'Select State' : null,
+                            style: TextStyle(
+                              color: Theme.of(context).textTheme.bodyLarge?.color,
+                            ),
+                            dropdownColor: Theme.of(context).cardColor,
                           ),
                         ),
                         Row(
@@ -570,6 +574,9 @@ class _SupplierSignupPageState extends State<SupplierSignupPage> {
             (value) => value == null || value.isEmpty
                 ? 'This field is required'
                 : null,
+        style: TextStyle(
+          color: Theme.of(context).textTheme.bodyLarge?.color,
+        ),
       ),
     );
   }
@@ -603,6 +610,10 @@ class _SupplierSignupPageState extends State<SupplierSignupPage> {
         },
         validator: (value) =>
             value == null ? 'Please select company type' : null,
+        style: TextStyle(
+          color: Theme.of(context).textTheme.bodyLarge?.color,
+        ),
+        dropdownColor: Theme.of(context).cardColor,
       ),
     );
   }
@@ -619,7 +630,7 @@ class _SupplierSignupPageState extends State<SupplierSignupPage> {
         ),
         child: Row(
           children: [
-            Icon(Icons.calendar_today, size: 20, color: Colors.grey[600]),
+            Icon(Icons.calendar_today, size: 20, color: Theme.of(context).iconTheme.color?.withOpacity(0.6)),
             const SizedBox(width: 12),
             Text(
               _selectedExpiryDate == null

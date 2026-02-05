@@ -4,6 +4,7 @@ import 'package:med_shakthi/src/features/dashboard/pharmacy_home_screen.dart';
 import 'package:med_shakthi/src/features/auth/presentation/screens/supplier_signup_page.dart';
 import 'package:med_shakthi/src/features/auth/presentation/screens/signup_page.dart';
 import 'package:med_shakthi/src/features/dashboard/supplier_dashboard.dart';
+import 'package:med_shakthi/src/core/widgets/app_logo.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -131,35 +132,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  Center(
-                    child: Container(
-                      height: 90,
-                      width: 90,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                        borderRadius: BorderRadius.circular(22),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.12),
-                            blurRadius: 12,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(14),
-                        child: Image.asset(
-                          'assets/images/logo.png',
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(
-                                Icons.local_pharmacy,
-                                size: 40,
-                                color: Color(0xFF6AA39B),
-                              ),
-                        ),
-                      ),
-                    ),
+                  const Center(
+                    child: AppLogo(size: 100),
                   ),
                   const SizedBox(height: 40),
                   _label('Email'),
@@ -198,9 +172,9 @@ class _LoginPageState extends State<LoginPage> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () {},
-                      child: const Text(
+                      child: Text(
                         'Forgot Password?',
-                        style: TextStyle(color: Colors.grey),
+                        style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6)),
                       ),
                     ),
                   ),
@@ -246,11 +220,16 @@ class _LoginPageState extends State<LoginPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _socialIcon(Icons.facebook, Colors.blue),
+                      _socialIcon(Icons.facebook, const Color(0xFF1877F2)),
                       const SizedBox(width: 20),
-                      _socialIcon(Icons.g_mobiledata, Colors.green),
+                      _socialIcon(Icons.g_mobiledata, const Color(0xFFEA4335), size: 40),
                       const SizedBox(width: 20),
-                      _socialIcon(Icons.apple, Colors.black),
+                      _socialIcon(
+                        Icons.apple, 
+                        Theme.of(context).brightness == Brightness.dark 
+                          ? Colors.white 
+                          : Colors.black,
+                      ),
                     ],
                   ),
                   const SizedBox(height: 40),
@@ -266,8 +245,8 @@ class _LoginPageState extends State<LoginPage> {
                       },
                       child: RichText(
                         text: TextSpan(
-                          style: const TextStyle(
-                            color: Colors.grey,
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6),
                             fontSize: 14,
                           ),
                           children: [
@@ -301,12 +280,15 @@ class _LoginPageState extends State<LoginPage> {
                       },
                       child: RichText(
                         text: TextSpan(
-                          style: const TextStyle(
-                            color: Colors.grey,
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6),
                             fontSize: 14,
                           ),
                           children: [
-                            const TextSpan(text: 'Are you a distributor? '),
+                            TextSpan(
+                              text: 'Are you a distributor? ',
+                              style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7)),
+                            ),
                             TextSpan(
                               text: 'Register as Supplier',
                               style: TextStyle(
@@ -358,6 +340,7 @@ class _LoginPageState extends State<LoginPage> {
       validator: validator,
       decoration: InputDecoration(
         hintText: hint,
+        hintStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.4)),
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: Theme.of(context).cardColor,
@@ -369,7 +352,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _socialIcon(IconData icon, Color color) {
+  Widget _socialIcon(IconData icon, Color color, {double size = 30}) {
     return Container(
       width: 50,
       height: 50,
@@ -377,10 +360,13 @@ class _LoginPageState extends State<LoginPage> {
         shape: BoxShape.circle,
         color: Theme.of(context).cardColor,
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 8),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.3 : 0.1), 
+            blurRadius: 8,
+          ),
         ],
       ),
-      child: Icon(icon, color: color, size: 30),
+      child: Icon(icon, color: color, size: size),
     );
   }
 }

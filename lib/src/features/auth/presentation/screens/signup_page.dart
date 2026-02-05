@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:med_shakthi/src/features/dashboard/pharmacy_home_screen.dart';
+import 'package:med_shakthi/src/core/widgets/app_logo.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -90,30 +91,8 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   const SizedBox(height: 30),
 
-                  /// Logo
-                  Center(
-                    child: Container(
-                      height: 90,
-                      width: 90,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                        borderRadius: BorderRadius.circular(22),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.12),
-                            blurRadius: 12,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(14),
-                        child: Image.asset(
-                          'assets/images/logo.png',
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
+                  const Center(
+                    child: AppLogo(size: 100),
                   ),
 
                   const SizedBox(height: 40),
@@ -272,8 +251,8 @@ class _SignupPageState extends State<SignupPage> {
                       onTap: () => Navigator.pop(context),
                       child: RichText(
                         text: TextSpan(
-                          style: const TextStyle(
-                            color: Colors.grey,
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6),
                             fontSize: 14,
                           ),
                           children: [
@@ -444,6 +423,15 @@ class _SignupPageState extends State<SignupPage> {
             borderSide: BorderSide.none,
           ),
           contentPadding: const EdgeInsets.all(16),
+          labelStyle: TextStyle(
+            color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+          ),
+          hintStyle: TextStyle(
+            color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5),
+          ),
+        ),
+        style: TextStyle(
+          color: Theme.of(context).textTheme.bodyLarge?.color,
         ),
       ),
     );

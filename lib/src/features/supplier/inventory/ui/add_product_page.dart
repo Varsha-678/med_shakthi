@@ -318,6 +318,7 @@ class _AddProductPageState extends State<AddProductPage> {
     );
   }
 
+  InputDecoration _inputDecoration(String label) {
     return InputDecoration(
       labelText: label,
       labelStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7)),
