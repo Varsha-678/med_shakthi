@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:med_shakthi/src/features/dashboard/pharmacy_home_screen.dart';
-import 'package:med_shakthi/src/features/auth/presentation/screens/supplier_signup_page.dart';
-import 'package:med_shakthi/src/features/auth/presentation/screens/signup_page.dart';
 import 'package:med_shakthi/src/features/dashboard/supplier_dashboard.dart';
 import 'package:med_shakthi/src/core/widgets/app_logo.dart';
+import 'package:med_shakthi/src/features/auth/presentation/screens/role_selection_page.dart';
 
 import 'forgot_password_page.dart';
 
@@ -26,9 +25,6 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
   bool _isLoading = false;
 
-  // NEW: selected role in UI
-  String _selectedRole = 'customer'; // 'customer' or 'supplier'
-
   @override
   void dispose() {
     _emailController.dispose();
@@ -39,9 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _onLoginPressed() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     try {
       final AuthResponse res = await supabase.auth.signInWithPassword(
@@ -50,7 +44,6 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (res.user != null) {
-        // Check if this user has a supplier record
         final supplierData = await supabase
             .from('suppliers')
             .select()
@@ -66,20 +59,17 @@ class _LoginPageState extends State<LoginPage> {
           ),
         );
 
-        // Decide destination:
-        // 1) If they are in suppliers table, send to supplier dashboard
-        // 2) else go to pharmacy home
-        if (supplierData != null || _selectedRole == 'supplier') {
+        if (supplierData != null) {
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (BuildContext context) => const SupplierDashboard(),
+              builder: (_) => const SupplierDashboard(),
             ),
             (route) => false,
           );
         } else {
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (BuildContext context) => const PharmacyHomeScreen(),
+              builder: (_) => const PharmacyHomeScreen(),
             ),
             (route) => false,
           );
@@ -88,18 +78,12 @@ class _LoginPageState extends State<LoginPage> {
     } on AuthException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.message),
-          backgroundColor: Colors.redAccent,
-        ),
+        SnackBar(content: Text(e.message), backgroundColor: Colors.redAccent),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: $e'),
-          backgroundColor: Colors.redAccent,
-        ),
+        SnackBar(content: Text('Error: $e'), backgroundColor: Colors.redAccent),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -141,21 +125,21 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  const Center(
-                    child: AppLogo(size: 100),
-                  ),
+                  const Center(child: AppLogo(size: 100)),
                   const SizedBox(height: 40),
+
                   _label('Email'),
                   _textField(
                     controller: _emailController,
                     hint: 'emailaddress@gmail.com',
                     keyboardType: TextInputType.emailAddress,
-                    validator: (value) =>
-                        value != null && value.contains('@')
-                            ? null
-                            : 'Enter valid email',
+                    validator: (value) => value != null && value.contains('@')
+                        ? null
+                        : 'Enter valid email',
                   ),
+
                   const SizedBox(height: 20),
+
                   _label('Password'),
                   _textField(
                     controller: _passwordController,
@@ -173,31 +157,11 @@ class _LoginPageState extends State<LoginPage> {
                         });
                       },
                     ),
-                    validator: (value) =>
-                        value != null && value.length >= 6
-                            ? null
-                            : 'Minimum 6 characters',
+                    validator: (value) => value != null && value.length >= 6
+                        ? null
+                        : 'Minimum 6 characters',
                   ),
-                  const SizedBox(height: 10),
 
-                  // NEW: user-type toggle row
-                  Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _roleChip(label: 'Customer', value: 'customer'),
-                          const SizedBox(width: 6),
-                          _roleChip(label: 'Supplier', value: 'supplier'),
-                        ],
-                      ),
-                    ),
-                  ),
                   const SizedBox(height: 10),
 
                   Align(
@@ -218,13 +182,15 @@ class _LoginPageState extends State<LoginPage> {
                               .textTheme
                               .bodySmall
                               ?.color
-                              ?.withOpacity(0.6),
+                              ?.withValues(alpha: 0.6),
                         ),
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 16),
-                SizedBox(
+
+                  SizedBox(
                     width: double.infinity,
                     height: 52,
                     child: ElevatedButton(
@@ -237,13 +203,9 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       child: _isLoading
-                          ? const SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
                             )
                           : const Text(
                               'Login',
@@ -254,50 +216,16 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                     ),
                   ),
-                  const SizedBox(height: 30),
-                  Center(
-                    child: Text(
-                      'Social Login',
-                      style: TextStyle(
-                        color: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.color
-                            ?.withOpacity(0.7),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _socialIcon(
-                        Icons.facebook,
-                        const Color(0xFF1877F2),
-                      ),
-                      const SizedBox(width: 20),
-                      _socialIcon(
-                        Icons.g_mobiledata,
-                        const Color(0xFFEA4335),
-                        size: 40,
-                      ),
-                      const SizedBox(width: 20),
-                      _socialIcon(
-                        Icons.apple,
-                        Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
-                      ),
-                    ],
-                  ),
+
                   const SizedBox(height: 40),
+
                   Center(
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const SignupPage(),
+                            builder: (_) => const RoleSelectionPage(),
                           ),
                         );
                       },
@@ -308,21 +236,12 @@ class _LoginPageState extends State<LoginPage> {
                                 .textTheme
                                 .bodySmall
                                 ?.color
-                                ?.withOpacity(0.6),
+                                ?.withValues(alpha: 0.6),
                             fontSize: 14,
                           ),
-                          children: [
+                          children: const [
+                            TextSpan(text: "Don't have an account? "),
                             TextSpan(
-                              text: "Don't have an account? ",
-                              style: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.color
-                                    ?.withOpacity(0.7),
-                              ),
-                            ),
-                            const TextSpan(
                               text: 'Sign up',
                               style: TextStyle(
                                 color: Color(0xFF6AA39B),
@@ -335,91 +254,11 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const SupplierSignupPage(),
-                          ),
-                        );
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          style: TextStyle(
-                            color: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.color
-                                ?.withOpacity(0.6),
-                            fontSize: 14,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: 'Are you a distributor? ',
-                              style: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.color
-                                    ?.withOpacity(0.7),
-                              ),
-                            ),
-                            const TextSpan(
-                              text: 'Register as Supplier',
-                              style: TextStyle(
-                                color: Color(0xFF6AA39B),
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+
                   const SizedBox(height: 20),
                 ],
               ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // Small pill buttons for role selection
-  Widget _roleChip({required String label, required String value}) {
-    final bool isSelected = _selectedRole == value;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedRole = value;
-        });
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        padding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? const Color(0xFF6AA39B)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: isSelected ? Colors.white : Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.color
-                ?.withOpacity(0.7),
           ),
         ),
       ),
@@ -454,43 +293,14 @@ class _LoginPageState extends State<LoginPage> {
       validator: validator,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(
-          color: Theme.of(context)
-              .textTheme
-              .bodySmall
-              ?.color
-              ?.withOpacity(0.4),
-        ),
-        suffixIcon: suffixIcon,
         filled: true,
         fillColor: Theme.of(context).cardColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide.none,
         ),
+        suffixIcon: suffixIcon,
       ),
-    );
-  }
-
-  Widget _socialIcon(IconData icon, Color color, {double size = 30}) {
-    return Container(
-      width: 50,
-      height: 50,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Theme.of(context).cardColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(
-              Theme.of(context).brightness == Brightness.dark
-                  ? 0.3
-                  : 0.1,
-            ),
-            blurRadius: 8,
-          ),
-        ],
-      ),
-      child: Icon(icon, color: color, size: size),
     );
   }
 }
