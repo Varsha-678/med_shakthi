@@ -10,6 +10,7 @@ import '../supplier/inventory/ui/add_product_page.dart';
 
 class SupplierDashboard extends StatefulWidget {
   const SupplierDashboard({super.key});
+
   @override
   State<SupplierDashboard> createState() => _SupplierDashboardState();
 }
@@ -24,7 +25,7 @@ class _SupplierDashboardState extends State<SupplierDashboard> {
   late final List<Widget> _pages = [
     const SupplierDashboardHome(),
     const SupplierCategoryPage(),
-    const SizedBox(), // Placeholder for center "Add" button which navigates instead of switching tabs
+    const SizedBox(), // center "Add" button
     const OrdersPage(),
     const SupplierProfileScreen(),
   ];
@@ -34,7 +35,6 @@ class _SupplierDashboardState extends State<SupplierDashboard> {
     final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      // Removed FloatingActionButton as requested
       body: SafeArea(child: _pages[_selectedIndex]),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -51,12 +51,10 @@ class _SupplierDashboardState extends State<SupplierDashboard> {
           selectedItemColor: const Color(0xFF4CA6A8),
           unselectedItemColor: Colors.grey,
           showUnselectedLabels: true,
-          currentIndex: _selectedIndex == 2
-              ? 0
-              : _selectedIndex, // Prevent selecting "Add Product" visually if needed, but here we treat it as a tab
+          currentIndex:
+              _selectedIndex == 2 ? 0 : _selectedIndex, // ignore center as tab
           onTap: (index) {
             if (index == 2) {
-              // Center Tab - Add Product
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const AddProductPage()),
@@ -115,19 +113,17 @@ class SupplierDashboardHome extends StatelessWidget {
           const SizedBox(height: 20),
           _buildPromoBanner(context),
           const SizedBox(height: 30),
-          _buildSectionHeader("Categories"),
-          const SizedBox(height: 15),
-          _buildCategoryList(context),
-          const SizedBox(height: 30),
+          // Categories section removed
           _buildSectionHeader("Performance Stats"),
           const SizedBox(height: 15),
           _buildPerformanceGrid(context),
-          const SizedBox(height: 100), // ✅ CHANGED: Space for FAB
+          const SizedBox(height: 100),
         ],
       ),
     );
   }
 
+  // TOP BAR without search bar
   Widget _buildTopBar(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Row(
@@ -143,29 +139,7 @@ class SupplierDashboardHome extends StatelessWidget {
             color: Theme.of(context).iconTheme.color,
           ),
         ),
-        const SizedBox(width: 15),
-
-        Expanded(
-          child: Container(
-            height: 50,
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(25),
-            ),
-            child: const TextField(
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search, color: Colors.grey),
-                hintText: "Search analytics...",
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(vertical: 15),
-              ),
-            ),
-          ),
-        ),
-
-        const SizedBox(width: 15),
-
-        // Theme Toggle (Replaced Cart)
+        const Spacer(),
         GestureDetector(
           onTap: () {
             themeProvider.toggleTheme();
@@ -253,6 +227,7 @@ class SupplierDashboardHome extends StatelessWidget {
     );
   }
 
+  // Categories list is no longer used – you can delete this method if you want
   Widget _buildCategoryList(BuildContext context) {
     final List<Map<String, dynamic>> cats = [
       {"icon": Icons.inventory_2, "label": "Orders"},
@@ -266,14 +241,13 @@ class SupplierDashboardHome extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: cats.length,
-        separatorBuilder: (_, _) => const SizedBox(width: 25),
+        separatorBuilder: (_, __) => const SizedBox(width: 25),
         itemBuilder: (context, index) {
           final label = cats[index]['label'];
 
           return InkWell(
             borderRadius: BorderRadius.circular(50),
             onTap: () {
-              //  NAVIGATION LOGIC
               if (label == "Orders") {
                 Navigator.push(
                   context,
@@ -385,7 +359,8 @@ class SupplierDashboardHome extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: const Color(0xFF4CA6A8).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
